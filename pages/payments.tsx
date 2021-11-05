@@ -2,21 +2,22 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { Payment } from "types/Razorpay";
-import moment from "moment";
 import Link from "next/link";
 
 const Home: NextPage = () => {
 	const [orders, setOrders] = useState<Payment[]>([]);
 
 	async function fetchOrders() {
-		const data: { success: boolean; orders: Payment[] } = await (
-			await fetch("https://razorpay-nextjs.vercel.app/api/getorders", {
+		const res = await fetch(
+			"https://razorpay-nextjs.vercel.app/api/getorders",
+			{
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 				},
-			})
-		).json();
+			}
+		);
+		const data: { success: boolean; orders: Payment[] } = await res.json();
 		setOrders(data.orders);
 	}
 	useEffect(() => {
