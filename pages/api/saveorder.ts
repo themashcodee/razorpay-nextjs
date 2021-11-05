@@ -17,7 +17,6 @@ export default async function handler(
 			const payment = await prisma.payment.create({
 				data: { order_id, payment_id, signature },
 			});
-			console.log(payment);
 			res
 				.status(200)
 				.json({ success: true, message: "Payment Successfully Completed!" });

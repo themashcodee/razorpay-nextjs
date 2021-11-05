@@ -5,12 +5,23 @@ import { Payment } from "types/Razorpay";
 import moment from "moment";
 import Link from "next/link";
 
-interface Props {
-	orders: Payment[] | [];
-}
+const Home: NextPage = () => {
+	const [orders, setOrders] = useState<Payment[]>([]);
 
-const Home: NextPage<Props> = (props) => {
-	const { orders } = props;
+	async function fetchOrders() {
+		const data: { success: boolean; orders: Payment[] } = await (
+			await fetch("https://razorpay-nextjs.vercel.app/api/getorders", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+		).json();
+		setOrders(data.orders);
+	}
+	useEffect(() => {
+		fetchOrders();
+	}, []);
 
 	return (
 		<>
@@ -41,7 +52,7 @@ const Home: NextPage<Props> = (props) => {
 				</Link>
 				<h1 className="text-4xl font-bold pb-4">All Donations</h1>
 				<div className="w-full flex gap-4 flex-wrap">
-					{props.orders.length
+					{orders.length
 						? orders.map((order, key) => {
 								return (
 									<div
@@ -66,17 +77,4 @@ const Home: NextPage<Props> = (props) => {
 		</>
 	);
 };
-
-export async function getServerSideProps() {
-	const data: { success: boolean; orders: Payment[] } = await (
-		await fetch("https://razorpay-nextjs.vercel.app/api/getorders", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-	).json();
-
-	return { props: { orders: data?.orders || [] } };
-}
 export default Home;
