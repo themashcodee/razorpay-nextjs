@@ -69,7 +69,7 @@ const Home: NextPage<Props> = (props) => {
 
 export async function getServerSideProps() {
 	const data: { success: boolean; orders: Payment[] } = await (
-		await fetch("http://localhost:3000/api/getorders", {
+		await fetch("https://razorpay-nextjs.vercel.app/api/getorders", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
